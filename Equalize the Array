@@ -1,0 +1,29 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+import collections
+
+# Complete the equalizeArray function below.
+def equalizeArray(arr):
+    cnt = collections.Counter(arr)
+    
+    m_el_num = max(cnt.items(), key = lambda x: x[1])
+    
+    return len(arr) - m_el_num[1]
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    n = int(input())
+
+    arr = list(map(int, input().rstrip().split()))
+
+    result = equalizeArray(arr)
+
+    fptr.write(str(result) + '\n')
+
+    fptr.close()
