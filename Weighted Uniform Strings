@@ -1,4 +1,5 @@
 #!/bin/python3
+# Not Optimised
 
 import math
 import os
