@@ -1,0 +1,73 @@
+# #!/bin/python3
+
+# import math
+# import os
+# import random
+# import re
+# import sys
+
+# #
+# # Complete the 'dynamicArray' function below.
+# #
+# # The function is expected to return an INTEGER_ARRAY.
+# # The function accepts following parameters:
+# #  1. INTEGER n
+# #  2. 2D_INTEGER_ARRAY queries
+# #
+
+# def dynamicArray(n, queries):
+#     # Write your code here
+#     # lastAnswer = 0
+#     # s0 = []
+#     # s1 = []
+#     # index = 0
+#     # l = []
+#     # for i in range(len(queries)):
+#     #     if queries[i][0] == 1:
+#     #         if (lastAnswer ^ queries[i][1])%n == 0:
+#     #             s0.append(queries[i][2])
+#     #         else:
+#     #             s1.append(queries[i][2])
+#     #     else:
+#     #         if (lastAnswer ^ queries[i][1])%n == 0:
+#     #             lastAnswer =  s0[index]
+#     #         else:
+#     #             lastAnswer = s1[index]
+#     #         index += 1
+#     #         l.append(lastAnswer)
+#     # return l
+
+# if __name__ == '__main__':
+#     fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+#     first_multiple_input = input().rstrip().split()
+
+#     n = int(first_multiple_input[0])
+
+#     q = int(first_multiple_input[1])
+
+#     queries = []
+
+#     for _ in range(q):
+#         queries.append(list(map(int, input().rstrip().split())))
+
+#     result = dynamicArray(n, queries)
+
+#     fptr.write('\n'.join(map(str, result)))
+#     fptr.write('\n')
+
+#     fptr.close()
+if __name__ == "__main__":
+    N, Q = map(int, input().strip().split(' '))
+    sequences = [[] for _ in range(N)]
+    last_answer = 0
+    
+    for q in range(Q):
+        q_type, x, y = map(int, input().strip().split(' '))
+        seq_num = (x ^ last_answer) % N
+        
+        if q_type == 2:
+            last_answer = sequences[seq_num][y % len(sequences[seq_num])]
+            print(last_answer)
+        else:
+            sequences[seq_num].append(y)
