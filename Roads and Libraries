@@ -1,0 +1,124 @@
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+/*
+ * Complete the 'roadsAndLibraries' function below.
+ *
+ * The function is expected to return a LONG_INTEGER.
+ * The function accepts following parameters:
+ *  1. INTEGER n
+ *  2. INTEGER c_lib
+ *  3. INTEGER c_road
+ *  4. 2D_INTEGER_ARRAY cities
+ */
+
+function roadsAndLibraries(n, c_lib, c_road, cities) {
+    // Write your code here
+    
+    const adjacencyList = buildAdjacencyList(n, cities);
+    const visited = new Set();
+    const result = {
+        noOfRoads: 0,
+        noOfLibraries: 0,
+    }
+    
+    let cost = n * c_lib;
+    
+    // DFS
+    for (let node in adjacencyList) {
+        if (!(visited.has(String(node)))) {
+            result.noOfLibraries += 1;
+        };
+        const roads = exploreCities(adjacencyList, node, visited, result);
+        
+    }
+    const calculatedCost = result.noOfLibraries * c_lib + result.noOfRoads * c_road;
+    cost = calculatedCost < cost ? calculatedCost : cost;
+    return cost;
+}
+
+// DFS
+const exploreCities = (graph, node, visited, result) => {
+    if (visited.has(String(node))) return 0;
+    
+    visited.add(String(node));
+    
+    let size = 1;
+    
+    for (let neighbor of graph[node]) {
+        if (!(visited.has(String(neighbor)))) {
+            result.noOfRoads += 1;
+        };
+        size += exploreCities(graph, neighbor, visited, result);
+    }
+    
+    return size;
+};
+
+const buildAdjacencyList = (noOfCities, adjacencyMatrix) => {
+    const graph = {};
+    
+    for (let i=1; i <= noOfCities; i++) {
+        graph[i] = [];
+    }
+    
+    for (let edge of adjacencyMatrix) {
+        const [a, b] = edge;
+        
+        graph[a].push(b);
+        graph[b].push(a);
+    }
+    
+    return graph;
+;}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const q = parseInt(readLine().trim(), 10);
+
+    for (let qItr = 0; qItr < q; qItr++) {
+        const firstMultipleInput = readLine().replace(/\s+$/g, '').split(' ');
+
+        const n = parseInt(firstMultipleInput[0], 10);
+
+        const m = parseInt(firstMultipleInput[1], 10);
+
+        const c_lib = parseInt(firstMultipleInput[2], 10);
+
+        const c_road = parseInt(firstMultipleInput[3], 10);
+
+        let cities = Array(m);
+
+        for (let i = 0; i < m; i++) {
+            cities[i] = readLine().replace(/\s+$/g, '').split(' ').map(citiesTemp => parseInt(citiesTemp, 10));
+        }
+
+        const result = roadsAndLibraries(n, c_lib, c_road, cities);
+
+        ws.write(result + '\n');
+    }
+
+    ws.end();
+}
